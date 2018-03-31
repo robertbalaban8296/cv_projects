@@ -1,0 +1,71 @@
+
+STUDENT: BALABAN Robert-Adrian
+GRUPA: 334CC
+
+
+
+Specificatii tehnice:
+
+		- List (struct list) -> structura ce repezinta un nod dintr-o lista 
+	inlantuita. Contine 2 elemente: data (linia si coloana punctului) si next (se
+	face trecerea la urmatorul element)
+
+		-initList(line, col) -> aloca memorie pentru un nod dintr-o lista 
+
+		-addLast(lista, line,col) -> adauga la finalul listei un element 
+
+		-addFirst(lista, line,col) -> adauga la inceputul listei un element 
+
+		-getLast(lista) -> intoarce coordonatele ultimului element 
+	(sfarsitul sarpelui)
+
+		-removeLast(lista) -> sterge din lista si din memorie ultimul element 
+	din lista
+
+		-contains(lista, line, col) -> verifica daca exista punctul cu 
+	coordonatele linie si col in lista. 1 - daca exista, 0 - daca nu exista
+
+		-eraseContent(lista) -> dezaloca memoria pentru lista
+
+		-getCoords(world, encode, head, num_lines, num_cols) -> metoda ce creeaza 
+	sarpele (reprezentat prin lista inlantuita, avand drept cod variabila encode), 
+	cautand pe harta(world) coordonatele head-ului. Sarpele se creeaza verificand 
+	existenta vecinilor sai (conform limitarilor impuse de cerinta), iar daca gaseste 
+	un vecin il adauga in lista si cauta vecinul vecinului care nu exista in lista. 
+	Cand nu mai exista vecini negasiti se va opri si va intoarce sarpele.
+
+		-switchDir(dir, line1, col1, num_cols, num_lines) -> metoda ce intoarce 
+	coordonatele viitorului capat al sarpelui , in functie de directia de deplasare(dir).
+
+		-run_simulation()-> implementeaza algoritmul
+				- counter -> specifica runda curenta
+				- coliziune -> variabila ce spune daca exista coliziune sau nu. 
+	1 - true, 0 -false
+				- i -> index folosit in for-uri
+				- last_line[i] / last_col[i] -> retine pentru sarpele i pozitia
+	 cozii (ultimului element din lista)
+				- snakePos[i] -> cate o lista inlantuita pentru fiecare sarpe
+
+
+
+Detalii despre algoritm:
+		- Mai intai, avem o bucla principala(while) pentru a reprezenta iteratiile 
+	specifice fiecarei runde. In aceasta bucla, iteram (folosind mai multe thread-uri) 
+	fiecare sarpe. Daca este prima runda, punem serpii in liste. newPos va retine 
+	coordonatele viitorului cap al sarpelui. Daca nu exista coliziune, atunci actualizam 
+	harta si sarpele respectiv. Daca exista coliziune, activam coliziune = 1, punem 
+	conditia pentru iesirea din bucla principala (counter = step_count + 1) si eliberam 
+	memoria pentru sarpele i (deoarece sarpele i nu si-a modificat pozitia asa ca nu mai 
+	este nevoie de coordonatele lui). Dupa ce se iese din bucla principala, daca a existat 
+	coliziune in runda k , atunci trebuie afisata harta de la runda k - 1. Pentru toti 
+	serpii care nu si-au modificat pozitia s-au sters listele lor. Acum se vor muta 
+	inapoi serpii care si-au schimbat pozitia , si dupa fiecare iteratie se va elibera memoria.
+
+
+
+Timpi: (s-au aplicat 20000 runde pe fep.grid.pub.ro)
+	big_input  	- 53.529762759 - OMP_NUM_THREADS=1
+				- 28.465645686 - OMP_NUM_THREADS=2
+				- 16.987220413 - OMP_NUM_THREADS=4
+				- 10.917841909 - OMP_NUM_THREADS=6
+				- 8.104786763 - OMP_NUM_THREADS=8 (Se observa scalabilitatea)
